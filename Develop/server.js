@@ -1,7 +1,6 @@
 const express = require('express');
 const path = require('path');
-const { currentNotes } = require('./db/db.json');
-// const { handleNoteSave, saveNote, getAndRenderNotes, renderActiveNote, getNotes, renderNoteList } = require('./public/assets/js/index')
+const fs = require('fs')
 
 // sets port number to listen on
 const PORT = process.env.PORT || 3001;
@@ -25,7 +24,16 @@ app.get('*', (req, res) => {
 })
 
 app.post('/api/notes', (req, res) => {
-    res.json(req.body);
+    savedNotes = []
+    fs.readFile('./db/db.json', 'utf8', (err, data) => {
+        if (err) {
+            console.log(err);
+        }
+        var currentNotes = JSON.parse(data);
+        currentNotes.push(req.body);
+        savedNotes.push(currentNotes);
+    });
+    console.log(savedNotes);
 })
 
 // sets port for server to listen on
