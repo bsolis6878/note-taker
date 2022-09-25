@@ -36,6 +36,7 @@ app.post('/api/notes', (req, res) => {
             }
         })
     });
+    res.json();
 })
 
 // sets port for server to listen on
