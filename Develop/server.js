@@ -24,16 +24,18 @@ app.get('*', (req, res) => {
 })
 
 app.post('/api/notes', (req, res) => {
-    savedNotes = []
     fs.readFile('./db/db.json', 'utf8', (err, data) => {
         if (err) {
             console.log(err);
         }
         var currentNotes = JSON.parse(data);
         currentNotes.push(req.body);
-        savedNotes.push(currentNotes);
+        fs.writeFile('./db/db.json', JSON.stringify(currentNotes), (err) => {
+            if (err) {
+                console.log(err);
+            }
+        })
     });
-    console.log(savedNotes);
 })
 
 // sets port for server to listen on
