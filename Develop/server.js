@@ -1,5 +1,7 @@
 const express = require('express');
 const path = require('path');
+const { currentNotes } = require('./db/db.json');
+// const { handleNoteSave, saveNote, getAndRenderNotes, renderActiveNote, getNotes, renderNoteList } = require('./public/assets/js/index')
 
 // sets port number to listen on
 const PORT = process.env.PORT || 3001;
@@ -20,6 +22,10 @@ app.get('/api/notes', (req, res) => {
 
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, './public/index.html'));
+})
+
+app.post('/api/notes', (req, res) => {
+    res.json(req.body);
 })
 
 // sets port for server to listen on
