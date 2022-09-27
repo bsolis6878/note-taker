@@ -1,6 +1,7 @@
 const express = require('express');
 const path = require('path');
 const fs = require('fs')
+const notes = require('./db/db.json');
 
 // sets port number to listen on
 const PORT = process.env.PORT || 3001;
@@ -24,11 +25,12 @@ app.get('*', (req, res) => {
 })
 
 app.post('/api/notes', (req, res) => {
+    req.body.id = notes.length += 1;
     fs.readFile('./db/db.json', 'utf8', (err, data) => {
         if (err) {
             console.log(err);
         }
-        var currentNotes = JSON.parse(data);
+        let currentNotes = JSON.parse(data);
         currentNotes.push(req.body);
         fs.writeFile('./db/db.json', JSON.stringify(currentNotes), (err) => {
             if (err) {
@@ -37,6 +39,24 @@ app.post('/api/notes', (req, res) => {
         })
     });
     res.json();
+})
+
+app.delete('/api/notes/:id', (req, res) => {
+    let notesId = parseInt(req.params.id);
+
+    fs.readFile('./db/db.json', 'utf8', (err, data) => {
+        if (err) {
+            console.log(err);
+        }
+        currentNotes = JSON.parse(data);
+        let newNote = currentNotes.filter(note => note.id !== notesId);
+        fs.writeFile('./db/db.json', JSON.stringify(newNote), (err) => {
+            if (err) {
+                console.log(err);
+            }
+        })
+        res.json(newNote);
+    })
 })
 
 // sets port for server to listen on
